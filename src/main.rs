@@ -7,12 +7,12 @@ fn main() {
         style: 1,
         row_id: true,
         auto_format: true,
-        headers: vec!["name".to_owned(), "age".to_owned()],
+        headers: vec!["name".to_owned(), "age".to_owned(), "email".to_owned(), "random".to_owned()],
         rows: Vec::new(),
         word_len: Vec::new(),
     };
 
-    t.insert_row(vec!["Cristiano".to_owned(), "20".to_owned()]);
+    t.insert_row(vec!["Cristiano".to_owned(), "20".to_owned(), "email".to_owned(), "random".to_owned()]);
     println!("{:?}", t.get_rows());
     t.normal_print();
 }

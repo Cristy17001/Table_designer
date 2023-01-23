@@ -1,3 +1,4 @@
+use std::fmt::format;
 use std::io::repeat;
 
 pub struct Table {
@@ -22,23 +23,28 @@ impl Table {
 
 
     pub fn insert_row(&mut self, row: Vec<String>) {
-        if self.word_len.is_empty() {self.word_len = vec![0, self.headers.len()]}
+        if self.word_len.is_empty() {self.word_len = vec![0; self.headers.len()]}
 
         for i in 0..row.len() {
-            if row[i].len() > self.word_len[i] {self.word_len[i] = row[i].len()}
+            if row[i].len() > self.word_len[i] {self.word_len[i] = row[i].len();}
+            if self.headers.len() > self.word_len[i] {self.word_len[i] = self.headers[i].len();}
         }
         self.rows.push(row);
     }
 
     pub fn normal_print(&self) {
-        let top_left = "+";
-        let top_right = "+";
-        let bottom_left = "+";
-        let bottom_right = "+";
+        let top_left = "┏";
+        let top_right = "┓";
+        let bottom_left = "┗";
+        let bottom_right = "┛";
 
-        let separator = "+";
-        let line = "-";
-        let col = "|";
+        let top_intersect = "┳";
+        let bottom_intersect = "┻";
+        let right_separator = "┫";
+        let left_separator = "┣";
+        let separator = "╋";
+        let line = "━";
+        let col = "┃";
 
         let n_cols = self.headers.len();
         let n_rows = self.rows.len();
@@ -48,11 +54,32 @@ impl Table {
         // +--------+--------+--------+
 
         let mut top_line: String = top_left.to_string();
-
+        let mut header: String = String::new();
+        let mut normal_line: String = String::new();
         for i in 0..n_cols {
-            top_line += format!("{}{}", line.repeat(self.word_len[i]+2), separator).as_str();
+            if i == 0 {
+                normal_line += format!("{}{}", left_separator, line.repeat(self.word_len[i]+2)).as_str();
+            }
+            else {
+                normal_line += format!("{}{}", separator, line.repeat(self.word_len[i]+2)).as_str();
+            }
+            if i == n_cols-1 {
+                top_line += format!("{}{}", line.repeat(self.word_len[i]+2), top_right).as_str();
+            }
+            else {
+                top_line += format!("{}{}", line.repeat(self.word_len[i]+2), top_intersect).as_str();
+            }
+            header += format!("{}{}{}", col, self.headers[i], " ".repeat(self.word_len[i]-self.headers[i].len()+2)).as_str();
         }
+        header += col;
+        normal_line += right_separator;
+
+
         println!("{}", top_line);
+        println!("{}", header);
+        println!("{}", normal_line);
+
+
         //top_line[5] = "a";
 
 
