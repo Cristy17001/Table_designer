@@ -14,10 +14,10 @@ impl Table {
     /// Desired style for the table format:
     /// 1 -> +---------+---------+---------+
     /// 2 -> special characters
-    pub fn get_style(&self) -> i32 { self.style }
-    pub fn get_format(&self) -> bool { self.auto_format }
-    pub fn get_headers(&self) -> Vec<String> { self.headers.clone() }
-    pub fn get_rows(&self) -> Vec<Vec<String>> { self.rows.clone() }
+    pub fn get_style(&self) -> i32 {self.style}
+    pub fn get_format(&self) -> bool {self.auto_format}
+    pub fn get_headers(&self) -> Vec<String> {self.headers.clone()}
+    pub fn get_rows(&self) -> Vec<Vec<String>> {self.rows.clone()}
 
 
     pub fn insert_row(&mut self, row: Vec<String>) {
@@ -72,6 +72,33 @@ impl Table {
                 separator = "╬";
                 line = "═";
                 col = "║";
+            }
+            4 => {
+                top_left = "┌";
+                top_right = "┐";
+                bottom_left = "└";
+                bottom_right = "┘";
+
+                top_intersect = "┬";
+                bottom_intersect = "┴";
+                right_separator = "┤";
+                left_separator = "├";
+                separator = "┼";
+                line = "─";
+                col = "│";}
+            5 => {
+                top_left = "╭";
+                top_right = "╮";
+                bottom_left = "╰";
+                bottom_right = "╯";
+
+                top_intersect = "┬";
+                bottom_intersect = "┴";
+                right_separator = "┤";
+                left_separator = "├";
+                separator = "┼";
+                line = "─";
+                col = "│";
             }
             _ => { panic!("Error: Style not accepted") }
         }
