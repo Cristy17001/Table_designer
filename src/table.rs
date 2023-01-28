@@ -1,6 +1,7 @@
 use std::fmt::format;
 use std::io::repeat;
 
+#[derive(Default, Debug, PartialEq)]
 pub struct Table {
     pub style: i32,
     pub auto_format: bool,
@@ -10,27 +11,58 @@ pub struct Table {
 }
 
 impl Table {
-    // Getters
-    /// Desired style for the table format:
-    /// 1 -> +---------+---------+---------+
-    /// 2 -> special characters
     pub fn get_style(&self) -> i32 {self.style}
     pub fn get_format(&self) -> bool {self.auto_format}
     pub fn get_headers(&self) -> Vec<String> {self.headers.clone()}
     pub fn get_rows(&self) -> Vec<Vec<String>> {self.rows.clone()}
+    pub fn add_header(&mut self, header: String) {self.headers.push(header);}
+    pub fn change_style(&mut self) {
+        let mut user_input = String::new();
+        println!("Style 1:\n+---------+---------+\n|name     |age      |\n+---------+---------+");
+        println!("Style 2:\n┏━━━━━━━━━┳━━━━━━━━━┓\n┃name     ┃age      ┃\n┗━━━━━━━━━┻━━━━━━━━━┛");
+        println!("Style 3:\n╔═════════╦═════════╗\n║name     ║age      ║\n╚═════════╩═════════╝");
+        println!("Style 4:\n┌─────────┬─────────┐\n│name     │age      │\n└─────────┴─────────┘");
+        println!("Style 5:\n╭─────────┬─────────╮\n│name     │age      │\n╰─────────┴─────────╯");
 
+        println!("Please select a style (Example: 1 or 2 or 3...): ");
+        std::io::stdin().read_line(&mut user_input).expect("Failed to read line");
+        let user_input_char: char = user_input.trim().parse().expect("Please type a single character");
+
+        match user_input_char {
+            '1' => self.style = 1,
+            '2' => self.style = 2,
+            '3' => self.style = 3,
+            '4' => self.style = 4,
+            '5' => self.style = 5,
+            _ => println!("Cannot recognise character!")
+        };
+    }
 
     pub fn insert_row(&mut self, row: Vec<String>) {
-        if self.word_len.is_empty() { self.word_len = vec![0; self.headers.len()] }
+        if self.word_len.is_empty() {
+            for e in &self.headers {
+                self.word_len.push(e.len());
+            }
+        }
 
         for i in 0..row.len() {
-            if row[i].len() > self.word_len[i] { self.word_len[i] = row[i].len(); }
+            if row[i].len() > self.word_len[i] { self.word_len[i] = row[i].len();}
             if self.headers.len() > self.word_len[i] { self.word_len[i] = self.headers[i].len(); }
         }
         self.rows.push(row);
     }
 
-    pub fn print(&self) -> String{
+    pub fn input_row(&mut self) {
+        let mut user_input = String::new();
+
+        println!("Please introduce a row (Example: Rname, Remail, Rage)");
+        std::io::stdin().read_line(&mut user_input).expect("Failed to read line");
+        let mut row: Vec<&str> = user_input.split(',').collect();
+        let row_string: Vec<String> = row.iter().map(|s| s.trim().to_string()).collect();
+        self.insert_row(row_string);
+    }
+
+    pub fn design_table(&self) -> String {
         let mut top_left = "+";
         let mut top_right = "+";
         let mut bottom_left = "+";
@@ -112,6 +144,9 @@ impl Table {
         let mut normal_line: String = String::new();
         let mut res: String = String::new();
 
+        if self.rows.len() == 0 {
+            return "".to_string();
+        }
 
         for i in 0..n_cols {
             if i == 0 {
@@ -149,7 +184,7 @@ impl Table {
                 res += format!("\n{end_line}\n").as_str();
             }
         }
-        println!("{}", res);
         res
     }
 }
+

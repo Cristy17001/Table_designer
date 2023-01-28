@@ -1,5 +1,4 @@
-extern crate core;
-
+use std::io;
 use crate::table::Table;
 
 mod table;
@@ -15,35 +14,43 @@ fn main() {
     println!("All rights reserved.");
     println!();
 
-    //loop {
-    //    println!("╭───────────────────────────────────────────────╮");
-    //    println!("│                 Table Designer                │");
-    //    println!("│───────────────────────────────────────────────│");
-    //    println!("│1. Insert new row                              │");
-    //    println!("│───────────────────────────────────────────────│");
-    //    println!("│2. Insert new row                              │");
-    //    println!("│───────────────────────────────────────────────│");
-    //    println!("│3. Insert row                                  │");
-    //    println!("│───────────────────────────────────────────────│");
-    //    println!("│4. Convert to print statement                  │");
-    //    println!("╰───────────────────────────────────────────────╯");
-
-
-    //}
-
-
-    let mut t = Table {
-        style: 5,
-        auto_format: true,
-        headers: vec!["name".to_owned(), "age".to_owned(), "email".to_owned(), "random".to_owned()],
-        rows: Vec::new(),
-        word_len: Vec::new(),
+    let mut t = Table{
+        style: 1,
+        ..Default::default()
     };
 
-    t.insert_row(vec!["Cristiano".to_owned(), "20".to_owned(), "cristianorocha170@gmail.com".to_owned(), "fffffff".to_owned()]);
-    t.insert_row(vec!["Rocha".to_owned(), "20".to_owned(), "rocha170@gmail.com".to_owned(), "dasdasdadgdgdgd".to_owned()]);
-    t.insert_row(vec!["Pedro".to_owned(), "20".to_owned(), "rocha170@gmail.com".to_owned(), "dkjanskdnaksd".to_owned()]);
+    let mut input:String = String::new();
+    println!("Introduce Headers for the table (ex: Name,Age,Email): ");
+    io::stdin().read_line(&mut input).expect("Failed to read line!");
+    let mut l_words: Vec<&str> = input.split(',').collect();
+    for w in l_words {
+        t.add_header(w.trim().to_string());
+    }
 
-    println!("{:?}", t.get_rows());
-    t.print();
+    loop {
+        println!("╭───────────────────────────────────────────────╮");
+        println!("│                 Table Designer                │");
+        println!("│───────────────────────────────────────────────│");
+        println!("│1. Insert Row                                  │");
+        println!("│───────────────────────────────────────────────│");
+        println!("│2. Print Table                                 │");
+        println!("│───────────────────────────────────────────────│");
+        println!("│3. Change Style                                │");
+        println!("│───────────────────────────────────────────────│");
+        println!("│4. Convert to print statement                  │");
+        println!("╰───────────────────────────────────────────────╯");
+
+        let mut user_input = String::new();
+        println!("=> ");
+        std::io::stdin().read_line(&mut user_input).expect("Failed to read line");
+        let user_input_char: char = user_input.trim().parse().expect("Please type a single character");
+
+        match user_input_char {
+            '1' => t.input_row(),
+            '2' => println!("{}", t.design_table()),
+            '3' => t.change_style(),
+            //'4' => t.insert_row(vec![]),
+            _ => println!("Cannot recognise character!")
+        };
+    }
 }
