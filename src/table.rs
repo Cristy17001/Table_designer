@@ -186,5 +186,33 @@ impl Table {
         }
         res
     }
+
+    pub fn print_statements(&self) {
+        let mut user_input = String::new();
+        println!("Select which language: ): ");
+        println!("1 => Python");
+        println!("2 => C++");
+        println!("3 => Rust");
+        println!("4 => Java");
+        println!("=> ");
+        std::io::stdin().read_line(&mut user_input).expect("Failed to read line");
+        let user_input_char: char = user_input.trim().parse().expect("Please type a single character");
+        let aux = self.design_table();
+        let lines = aux.trim().split('\n').collect();
+        match user_input_char {
+            '1' => print_languages(lines, "print(", ")"),
+            '2' => print_languages(lines, "printf(", ");"),
+            '3' => print_languages(lines, "println!(", ");"),
+            '4' => print_languages(lines, "System.out.println(", ");"),
+            _ => println!("Couldn't recognise character!")
+        }
+    }
+}
+
+fn print_languages(mut lines: Vec<&str>, prefix: &str, suffix: &str) {
+    for line in &mut lines {
+        let aux = format!("{prefix}\"{line}\"{suffix}");
+        println!("{}", aux);
+    }
 }
 

@@ -33,11 +33,15 @@ fn main() {
         println!("│───────────────────────────────────────────────│");
         println!("│1. Insert Row                                  │");
         println!("│───────────────────────────────────────────────│");
-        println!("│2. Print Table                                 │");
+        println!("│2. Print Without Centering                     │");
         println!("│───────────────────────────────────────────────│");
-        println!("│3. Change Style                                │");
+        println!("│3. Print and Center Table                      │");
         println!("│───────────────────────────────────────────────│");
-        println!("│4. Convert to print statement                  │");
+        println!("│4. Change Style                                │");
+        println!("│───────────────────────────────────────────────│");
+        println!("│5. Convert to print statement                  │");
+        println!("│───────────────────────────────────────────────│");
+        println!("│Q. Quit                                        │");
         println!("╰───────────────────────────────────────────────╯");
 
         let mut user_input = String::new();
@@ -47,9 +51,17 @@ fn main() {
 
         match user_input_char {
             '1' => t.input_row(),
-            '2' => println!("{}", t.design_table()),
-            '3' => t.change_style(),
-            //'4' => t.insert_row(vec![]),
+            '2' => {
+                t.auto_format = false;
+                println!("{}", t.design_table());
+            },
+            '3' => {
+                t.auto_format = true;
+                println!("{}", t.design_table());
+            },
+            '4' => t.change_style(),
+            '5' => t.print_statements(),
+            'Q' | 'q' => break,
             _ => println!("Cannot recognise character!")
         };
     }
